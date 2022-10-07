@@ -1,0 +1,42 @@
+spring:
+  rabbitmq:
+    host: 192.168.0.33
+    username: user
+    password: 123456
+    virtual-host: /test
+  cloud:
+    stream:
+      bindings:
+        goods_input:
+          binder: rabbit1
+          consumer:
+            headerMode: raw
+          producer:
+            headerMode: raw
+          #绑定的kafka topic名称
+          destination: goods-topic
+          content-type: text/plain
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: http://192.168.0.33:9092
+                      auto-add-partitions: true
+                      auto-create-topics: true
+                      min-partition-count: 1
+        rabbit1:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                addresses: 192.168.0.33
+                port: 5672
+                username: user
+                password: 123456
+                virtual-host: /test
+

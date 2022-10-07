@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="geektime.spring.springbucks.zuoye01.mapper.FractionMapper">
+
+    <resultMap id="BaseResultMap" type="geektime.spring.springbucks.zuoye01.entity.Fraction">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="studentId" column="student_id" jdbcType="BIGINT"/>
+        <result property="subject" column="subject" jdbcType="VARCHAR"/>
+        <result property="subjectName" column="subject_name" jdbcType="VARCHAR"/>
+        <result property="fraction" column="fraction" jdbcType="DOUBLE"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,student_id,subject,
+        subject_name,fraction,create_time,
+        update_time,state,remarks
+    </sql>
+
+    <select id="selectOne" parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_fraction
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="count" parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction" resultMap="BaseResultMap">
+        select
+        count(*)
+        from t_fraction
+        <where>
+            <if test="student_id != null">
+                student_id = #{studentId,jdbcType=BIGINT},
+            </if>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="subject_name != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fraction != null">
+                fraction = #{fraction,jdbcType=DOUBLE},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectPage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_fraction
+        <where>
+            <if test="student_id != null">
+                student_id = #{studentId,jdbcType=BIGINT},
+            </if>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="subject_name != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fraction != null">
+                fraction = #{fraction,jdbcType=DOUBLE},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </where>
+        limit #{pageStart},#{pageSize}
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete
+        from t_fraction
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction" useGeneratedKeys="true">
+        insert into t_fraction
+        ( id, student_id, subject
+        , subject_name, fraction, create_time
+        , update_time, state, remarks)
+        values ( #{id,jdbcType=BIGINT}, #{studentId,jdbcType=BIGINT}, #{subject,jdbcType=VARCHAR}
+               , #{subjectName,jdbcType=VARCHAR}, #{fraction,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP}
+               , #{updateTime,jdbcType=TIMESTAMP}, #{state,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction">
+        update t_fraction
+        <set>
+            <if test="student_id != null">
+                student_id = #{studentId,jdbcType=BIGINT},
+            </if>
+            <if test="subject != null">
+                subject = #{subject,jdbcType=VARCHAR},
+            </if>
+            <if test="subject_name != null">
+                subject_name = #{subjectName,jdbcType=VARCHAR},
+            </if>
+            <if test="fraction != null">
+                fraction = #{fraction,jdbcType=DOUBLE},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectByStudentId" parameterType="string"
+            resultType="geektime.spring.springbucks.zuoye01.dto.RankingDto">
+        SELECT convert((@i:=@i+1), SIGNED) as ranking, studentName, totalScore
+        FROM (select b.name as studentName, SUM(a.fraction) totalScore
+              from t_fraction a
+                       inner join t_student b on a.student_id = b.id
+              group by a.student_id
+              ORDER BY totalScore DESC limit #{pageStart}, #{pageSize}) c,
+             (select @i:=0) t
+    </select>
+
+</mapper>

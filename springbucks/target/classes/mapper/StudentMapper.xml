@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="geektime.spring.springbucks.zuoye01.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="geektime.spring.springbucks.zuoye01.entity.Student">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="studentNum" column="student_num" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,name,student_num,
+        create_time,update_time,state,
+        remarks
+    </sql>
+
+    <select id="selectOne" parameterType="geektime.spring.springbucks.zuoye01.entity.Student" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_student
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <select id="count" parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction" resultMap="BaseResultMap">
+        select count(*)
+        from t_student
+        <where>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="student_num != null">
+                student_num = #{studentNum,jdbcType=INTEGER},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPage" parameterType="geektime.spring.springbucks.zuoye01.entity.Fraction"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_student
+        <where>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="student_num != null">
+                student_num = #{studentNum,jdbcType=INTEGER},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+        delete
+        from t_student
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="geektime.spring.springbucks.zuoye01.entity.Student" useGeneratedKeys="true">
+        insert into t_student
+        ( id, name, student_num
+        , create_time, update_time, state
+        , remarks)
+        values ( #{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{studentNum,jdbcType=INTEGER}
+               , #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{state,jdbcType=VARCHAR}
+               , #{remarks,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="update" parameterType="geektime.spring.springbucks.zuoye01.entity.Student">
+        update t_student
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="student_num != null">
+                student_num = #{studentNum,jdbcType=INTEGER},
+            </if>
+            <if test="create_time != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
